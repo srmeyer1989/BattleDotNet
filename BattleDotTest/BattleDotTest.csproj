@@ -117,12 +117,6 @@
     <None Include="run.cmd" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QueueDodge\QueueDodge.csproj">
-      <Project>{b409f6b7-046f-453d-b753-6de896f7ca7d}</Project>
-      <Name>QueueDodge</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
