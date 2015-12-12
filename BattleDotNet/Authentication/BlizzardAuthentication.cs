@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace BattleDotNet.Authentication
 {
@@ -76,7 +78,7 @@ namespace BattleDotNet.Authentication
         /// <param name="state"></param>
         /// <param name="responseType"></param>
         /// <returns></returns>
-        public string GetAuthorization(string clientID, IEnumerable<string> scope, Uri redirectUri, string state, string responseType = "code")
+        public string GetAuthorization(string clientID, Scope scope, Uri redirectUri, string state, string responseType = "code")
         {
             string baseAuthorizationUri = authorizationUri.AbsoluteUri;
 
@@ -85,11 +87,11 @@ namespace BattleDotNet.Authentication
             uri.Append("?client_id=");
             uri.Append(WebUtility.UrlEncode(clientID));
 
-            foreach (string x in scope)
-            {
-                uri.Append("&scope=");
-                uri.Append(WebUtility.UrlEncode(x.Replace("_", ".")));
-            }
+            //foreach (string x in scope)
+            //{
+            uri.Append("&scope=");
+            uri.Append(WebUtility.UrlEncode(scope.ToString().Replace("_", ".")));
+            //}
 
             uri.Append("&state=");
             uri.Append(WebUtility.UrlEncode(state));
@@ -115,14 +117,42 @@ namespace BattleDotNet.Authentication
         /// <param name="redirectUri"></param>
         /// <param name="scope"></param>
         /// <param name="grantType"></param>
-        public void RequestAccessTokens(string authorizationCode, string redirectUri, IEnumerable<string> scope, string grantType)
+        public string RequestAccessTokens(string authorizationCode, string redirectUri, Scope scope, string grantType)
         {
             string baseAuthorizationUri = authorizationUri.AbsoluteUri;
 
+            //var data = new List<KeyValuePair<string, string>>();
 
-            //string authorization = http.PostAsync(uri.ToString(),).Result;
+            //data.Add(new KeyValuePair<string, string>("redirect_uri", "https://localhost"));
+            //data.Add(new KeyValuePair<string, string>("scope", "wow.profile"));
+            //data.Add(new KeyValuePair<string, string>("grant_type", "authorization_code"));
+            //data.Add(new KeyValuePair<string, string>("code", authorizationCode));
 
-            // return authorization;
+
+            var data = new
+            {
+                redirect_uri = "https://localhost",
+                scope = " ",
+                grant_type = "authorization_code",
+                code = authorizationCode,
+            };
+
+            //var param = "?redirect_uri=" + redirectUri + 
+            //    "&grant_type=" + grantType + 
+            //    "&code=" + authorizationCode + 
+            //    "&scope=" + scope.ToString().Replace("_", ".");
+
+            var byteArray = Encoding.ASCII.GetBytes("client:secret");
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+            string postBody = JsonConvert.SerializeObject(data);
+            var content = new StringContent(postBody, Encoding.UTF8, "application/json");
+            //  var content = new FormUrlEncodedContent(data);
+            //  http.DefaultRequestHeaders.
+            HttpResponseMessage response = http.PostAsync(tokenUri, content).Result;
+            //         response.EnsureSuccessStatusCode();
+            string stuff = response.Content.ReadAsStringAsync().Result;
+            return stuff;
         }
     }
 }

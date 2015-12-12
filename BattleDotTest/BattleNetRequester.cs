@@ -5,6 +5,8 @@
 //using BattleDotNet;
 //using Microsoft.AspNet.SignalR.Client;
 
+using System;
+
 namespace BattleDotTest
 {
     public class BattleNetRequester
@@ -13,6 +15,11 @@ namespace BattleDotTest
 
         public static void Main(string[] args)
         {
+            var x = new BattleDotNet.Authentication.BlizzardAuthentication(BattleDotNet.Region.us);
+            var code = x.GetAuthorization("client", BattleDotNet.Authentication.Scope.wow_profile, new Uri("https://localhost:443"), "");
+            var y = x.RequestAccessTokens(code, "https://localhost:443", BattleDotNet.Authentication.Scope.wow_profile, "");
+
+            Console.ReadLine();
 
             //            battleNetLeaderboardService = new LeaderboardIntegrationService(new QueueDodgeDB(), "heuemgj94eyv484cekut2a82d6crnskm");
 
