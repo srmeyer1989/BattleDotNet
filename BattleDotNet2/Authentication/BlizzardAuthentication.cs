@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using System.Text;
+using System.Net;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Net.Http.Headers;
 
 namespace BattleDotNet.Authentication
@@ -141,7 +140,7 @@ namespace BattleDotNet.Authentication
             //    "&code=" + authorizationCode + 
             //    "&scope=" + scope.ToString().Replace("_", ".");
 
-            var byteArray = Encoding.ASCII.GetBytes("heuemgj94eyv484cekut2a82d6crnskm:Cw5V9sdXnxdvHj5gexXvJQbQ4g9MTcds");
+            var byteArray = Encoding.UTF8.GetBytes("heuemgj94eyv484cekut2a82d6crnskm:Cw5V9sdXnxdvHj5gexXvJQbQ4g9MTcds");
             http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
             string postBody = JsonConvert.SerializeObject(data);
